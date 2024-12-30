@@ -25,3 +25,186 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-blue-300;
+  }
+
+  .btn-primary * {
+    @apply text-white stroke-white;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2;
+  }
+
+  .input-primary {
+    @apply w-full px-4 py-2 text-sm text-gray-800 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+
+  .btn-warning {
+    @apply px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:bg-red-300;
+  }
+
+  .btn-warning * {
+    @apply text-white stroke-white;
+  }
+}
+
+.pagination-item {
+  padding: 0 12px;
+  height: 32px;
+  text-align: center;
+  margin: auto 4px;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  letter-spacing: 0.01071em;
+  border-radius: 8px;
+  line-height: 1.43;
+  font-size: 12px;
+  min-width: 32px;
+}
+.pagination-item .dots:hover {
+  background-color: transparent;
+  cursor: default;
+}
+.pagination-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.pagination-item.selected {
+  border: 1px solid #0066ff;
+  border-radius: 8px;
+}
+
+.pagination-item.disabled {
+  pointer-events: none;
+  opacity: 0.5; /* Optional: to indicate it's disabled */
+}
+
+.pagination-item.selected {
+  border: 1px solid #0066ff;
+  border-radius: 8px;
+}
+
+.pagination-item.disabled {
+  pointer-events: none;
+  opacity: 0.5; /* Optional: to indicate it's disabled */
+}
+
+.pagination-item.selected {
+  border: 1px solid #0066ff;
+  border-radius: 8px;
+}
+
+.pagination-item.disabled {
+  pointer-events: none;
+  opacity: 0.5; /* Optional: to indicate it's disabled */
+}
+
+.dot-spinner {
+  --uib-size: 2.8rem;
+  --uib-speed: 0.9s;
+  --uib-color: #183153;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--uib-size);
+  width: var(--uib-size);
+}
+
+.dot-spinner__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+}
+
+.dot-spinner__dot::before {
+  content: "";
+  height: 20%;
+  width: 20%;
+  border-radius: 50%;
+  background-color: var(--uib-color);
+  transform: scale(0);
+  opacity: 0.5;
+  animation: pulse0112 calc(var(--uib-speed) * 1.111) ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(18, 31, 53, 0.3);
+}
+
+.dot-spinner__dot:nth-child(2) {
+  transform: rotate(45deg);
+}
+
+.dot-spinner__dot:nth-child(2)::before {
+  animation-delay: calc(var(--uib-speed) * -0.875);
+}
+
+.dot-spinner__dot:nth-child(3) {
+  transform: rotate(90deg);
+}
+
+.dot-spinner__dot:nth-child(3)::before {
+  animation-delay: calc(var(--uib-speed) * -0.75);
+}
+
+.dot-spinner__dot:nth-child(4) {
+  transform: rotate(135deg);
+}
+
+.dot-spinner__dot:nth-child(4)::before {
+  animation-delay: calc(var(--uib-speed) * -0.625);
+}
+
+.dot-spinner__dot:nth-child(5) {
+  transform: rotate(180deg);
+}
+
+.dot-spinner__dot:nth-child(5)::before {
+  animation-delay: calc(var(--uib-speed) * -0.5);
+}
+
+.dot-spinner__dot:nth-child(6) {
+  transform: rotate(225deg);
+}
+
+.dot-spinner__dot:nth-child(6)::before {
+  animation-delay: calc(var(--uib-speed) * -0.375);
+}
+
+.dot-spinner__dot:nth-child(7) {
+  transform: rotate(270deg);
+}
+
+.dot-spinner__dot:nth-child(7)::before {
+  animation-delay: calc(var(--uib-speed) * -0.25);
+}
+
+.dot-spinner__dot:nth-child(8) {
+  transform: rotate(315deg);
+}
+
+.dot-spinner__dot:nth-child(8)::before {
+  animation-delay: calc(var(--uib-speed) * -0.125);
+}
+
+@keyframes pulse0112 {
+  0%,
+  100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
