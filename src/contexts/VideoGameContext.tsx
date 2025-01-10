@@ -36,6 +36,8 @@ export const VideoGamesContextProvider = ({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
       title: filterOptions.videoGameTitle,
+      orderBy: filterOptions.orderBy,
+      isAscending: filterOptions.isAscending,
     });
   }, [filterOptions]);
 
@@ -43,15 +45,19 @@ export const VideoGamesContextProvider = ({
     currentPage,
     pageSize,
     title = "",
+    orderBy = "",
+    isAscending = undefined,
   }: {
     currentPage: number;
     pageSize: number;
     title: string;
+    isAscending: boolean | undefined;
+    orderBy: string;
   }) => {
     setIsLoading(true);
     const offset = pageSize * (currentPage - 1);
     const limit = pageSize;
-    getVideoGames(offset, limit, title)
+    getVideoGames(offset, limit, title, orderBy, isAscending)
       .then((videoGames: VideoGameSchema[]) => {
         setIsLoading(false);
         setVideoGames(videoGames);
@@ -73,6 +79,8 @@ export const VideoGamesContextProvider = ({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
       title: filterOptions.videoGameTitle,
+      orderBy: filterOptions.orderBy,
+      isAscending: filterOptions.isAscending,
     });
   };
 

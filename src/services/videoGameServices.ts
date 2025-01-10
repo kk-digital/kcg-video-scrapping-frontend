@@ -4,14 +4,22 @@ import { api } from "@/utils/api";
 export const getVideoGames = async (
   offset: number,
   limit: number,
-  title: string
+  title: string,
+  orderBy: string,
+  isAscending: boolean | undefined
 ) => {
   let url = "";
   const base_url = "/api/v1/video-games/list-video-games";
   url = `${base_url}?offset=${offset}&limit=${limit}`;
 
   if (title) {
-    url = `${base_url}?offset=${offset}&limit=${limit}&title=${title}`;
+    url += `&title=${title}`;
+  }
+  if (orderBy) {
+    url += `&order_by=${orderBy}`;
+  }
+  if (isAscending !== undefined) {
+    url += `&is_ascending=${isAscending}`;
   }
 
   try {

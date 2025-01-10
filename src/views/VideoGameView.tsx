@@ -2,6 +2,7 @@
 
 import SpinLoader from "@/components/Loader/SpinLoader";
 import Pagination from "@/components/Pagination/Pagination";
+import SortableHeader from "@/components/Table/SortableHeader";
 import { useVideoGameFilter } from "@/contexts/FilterVideoGameContext";
 import { useVideoGames } from "@/contexts/VideoGameContext";
 import { deleteVideoGames } from "@/services/videoGameServices";
@@ -12,8 +13,6 @@ import { toast } from "react-toastify";
 
 export default function VideoGameProcessingView() {
   const checkboxRef = useRef<HTMLInputElement>(null);
-  // const [pageSize, setPageSize] = useState<number>(10);
-  // const [currentPage, setCurrentPage] = useState<number>(1);
   const { refreshVideoGames } = useVideoGames();
   const { filterOptions, setFilterOptions } = useVideoGameFilter();
   const { isLoading, videoGames, totalCount } = useVideoGames();
@@ -71,6 +70,15 @@ export default function VideoGameProcessingView() {
     });
   };
 
+  const handleChangeSort = (label: string) => {
+    setFilterOptions({
+      ...filterOptions,
+      orderBy: label,
+      isAscending:
+        filterOptions.orderBy === label ? !filterOptions.isAscending : true,
+    });
+  };
+
   return (
     <>
       {/* Bulk Actions Bar */}
@@ -111,16 +119,34 @@ export default function VideoGameProcessingView() {
               <thead className="sticky top-0 bg-gray-50">
                 <tr className="bg-gray-200 border-b border-gray-200">
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
+                    <SortableHeader
+                      label="id"
+                      value="id"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Video Game Title
+                    <SortableHeader
+                      label="video game title"
+                      value="title"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-36 overflow-hidden text-ellipsis">
                     video Game Description
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-36 overflow-hidden text-ellipsis">
-                    Created At
+                    <SortableHeader
+                      label="created at"
+                      value="created_at"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                 </tr>
               </thead>
@@ -132,6 +158,7 @@ export default function VideoGameProcessingView() {
                       <span className="flex items-center gap-2">
                         <input
                           type="checkbox"
+                          id={`video-game-${index}`}
                           onChange={(e) =>
                             handleCheckboxClick(e, videoGame.game_id)
                           }
@@ -139,7 +166,12 @@ export default function VideoGameProcessingView() {
                             videoGame.game_id
                           )}
                         />
-                        {videoGame.game_id}
+                        <label
+                          className="text-sm text-gray-600 hover:cursor-pointer"
+                          htmlFor={`video-game-${index}`}
+                        >
+                          {videoGame.game_id}
+                        </label>
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
