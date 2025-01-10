@@ -5,3 +5,11 @@ export enum INGRESS_VIDEO_STATUS {
   FAILED = "failed",
   CANCELED = "canceled",
 }
+
+export enum QUERY_STATUS {
+  PENDING = "pending",
+  EXTRACTING = "extracting",
+  EXTRACTED = "extracted",
+  FAILED = "failed",
+  CANCELED = "canceled",
+}
