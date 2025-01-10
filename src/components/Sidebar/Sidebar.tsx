@@ -30,7 +30,7 @@ const Sidebar = () => {
             href="/video-game"
             className={classNames(
               "flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700",
-              path === "/video-game" ? "bg-gray-500" : ""
+              path.includes("/video-game") ? "bg-gray-500" : ""
             )}
           >
             <Gamepad2Icon className="mr-3" size={20} />
@@ -40,7 +40,7 @@ const Sidebar = () => {
             href="/search-query"
             className={classNames(
               "flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700",
-              path === "/search-query" ? "bg-gray-500" : ""
+              path.includes("/search-query") ? "bg-gray-500" : ""
             )}
           >
             <Search className="mr-3" size={20} />
@@ -50,7 +50,7 @@ const Sidebar = () => {
             href="/ingress-video"
             className={classNames(
               "flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700",
-              path === "/ingress-video" ? "bg-gray-500" : ""
+              path.includes("/ingress-video") ? "bg-gray-500" : ""
             )}
           >
             <Video className="mr-3" size={20} />
