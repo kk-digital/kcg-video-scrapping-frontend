@@ -3,7 +3,7 @@ export interface QuerySchema {
   query: string;
   game_id: string;
   status: string;
-  createdAt: string;
+  created_at: string;
   dmlAt: string;
   dmlType: string;
 }
