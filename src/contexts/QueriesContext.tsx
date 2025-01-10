@@ -8,6 +8,7 @@ import {
   useEffect,
 } from "react";
 import { useQueryFilter } from "./FilterQueryContext";
+import { QUERY_STATUS } from "@/types/enums";
 
 interface QueriesContextType {
   isLoading: boolean;
@@ -36,6 +37,7 @@ export const QueriesContextProvider = ({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
       query: filterOptions.query,
+      status: filterOptions.status,
     });
   }, [filterOptions]);
 
@@ -43,15 +45,17 @@ export const QueriesContextProvider = ({
     currentPage,
     pageSize,
     query,
+    status,
   }: {
     currentPage: number;
     pageSize: number;
     query: string;
+    status: QUERY_STATUS | undefined;
   }) => {
     setIsLoading(true);
     const offset = pageSize * (currentPage - 1);
     const limit = pageSize;
-    getQueries(offset, limit, query)
+    getQueries(offset, limit, query, status)
       .then((queries: QuerySchema[]) => {
         setIsLoading(false);
         setQueries(queries);
@@ -73,6 +77,7 @@ export const QueriesContextProvider = ({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
       query: filterOptions.query,
+      status: filterOptions.status,
     });
   };
 

@@ -1,9 +1,11 @@
+import { QUERY_STATUS } from "@/types/enums";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 export interface QueryFilterOption {
   currentPage: number;
   pageSize: number;
   query: string;
+  status: QUERY_STATUS | undefined;
 }
 
 interface QueryFilterContextType {
@@ -24,6 +26,7 @@ export const QueryFilterContextProvider = ({
     currentPage: 0,
     pageSize: 10,
     query: "",
+    status: undefined,
   });
 
   return (

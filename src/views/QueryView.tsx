@@ -5,6 +5,7 @@ import Pagination from "@/components/Pagination/Pagination";
 import { useQueryFilter } from "@/contexts/FilterQueryContext";
 import { useQuries } from "@/contexts/QueriesContext";
 import { deleteQueries } from "@/services/queryServices";
+import { QUERY_STATUS } from "@/types/enums";
 import { formatDateTimeReadable } from "@/utils/format";
 import {
   Clock,
@@ -28,7 +29,7 @@ const statusIcons: { [key: string]: JSX.Element } = {
 export default function QueryProcessingView({
   status = undefined,
 }: {
-  status: string | undefined;
+  status: QUERY_STATUS | undefined;
 }) {
   const checkboxRef = useRef<HTMLInputElement>(null);
   const { isLoading, totalCount, queries, refreshQueries } = useQuries();
@@ -36,6 +37,13 @@ export default function QueryProcessingView({
   const [selectedItems, setSelectedItems] = useState(0);
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [selectedQueryIds, setSelectedQueryIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    setFilterOptions({
+      ...filterOptions,
+      status: status,
+    });
+  }, []);
 
   useEffect(() => {
     if (checkboxRef.current) {
@@ -91,7 +99,7 @@ export default function QueryProcessingView({
             toast.error("Failed to delete queries");
           }
         })
-        .catch((error) => {
+        .catch(() => {
           toast.error("Failed to delete queries");
         });
     } else {
@@ -173,7 +181,7 @@ export default function QueryProcessingView({
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
                       <div className="flex items-center  hover:cursor-pointer">
-                        {formatDateTimeReadable(query.createdAt)}
+                        {formatDateTimeReadable(query.created_at)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
