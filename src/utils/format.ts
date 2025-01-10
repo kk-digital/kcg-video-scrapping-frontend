@@ -30,8 +30,8 @@ export function formatDateTimeReadable(dateTime: Date | string) {
     dateTime = new Date(dateTime);
   }
 
-  if (dateTime === null) {
-    return "";
+  if (dateTime === null || dateTime === undefined) {
+    return "N/A";
   }
 
   const months = [
