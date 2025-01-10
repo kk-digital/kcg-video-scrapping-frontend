@@ -33,7 +33,7 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
       game_id: videoGameId,
       title: videoGameTitle,
       description: videoGameDesp,
-    })
+    } as VideoGameSchema)
       .then((success) => {
         if (success) {
           toast.success("Video Game Added Successfully");
@@ -45,7 +45,7 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
             game_id: videoGameId,
             title: videoGameTitle,
             description: videoGameDesp,
-          });
+          } as VideoGameSchema);
           onClose();
         } else {
           toast.error("Failed to add video game");
@@ -76,7 +76,7 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
   return (
     <Transition show={isOpen}>
       <Dialog onClose={onClose} className="fixed inset-0 z-10 overflow-y-auto">
-        <div className="min-h-screen px-4 text-center">
+        <div className="min-h-screen text-center">
           <Transition.Child
             as="div"
             enter="ease-out duration-300"
@@ -94,6 +94,7 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
 
           <Transition.Child
             as="div"
+            className="w-full h-screen flex items-center justify-center"
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-95"
             enterTo="opacity-100 scale-100"
@@ -101,127 +102,163 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-              <Dialog.Title
-                as="h3"
-                className="text-lg font-medium leading-6 text-gray-900 flex items-center justify-between"
-              >
-                <span className="flex items-center">
-                  <Plus className="w-5 h-5 mr-2 text-blue-500" />
-                  Add Video Game
-                </span>
-                <button
-                  onClick={onClose}
-                  className="text-gray-400 hover:text-gray-500"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </Dialog.Title>
-
-              <div className="mt-4">
-                <div className="flex flex-col py-16">
-                  <label
-                    className="text-sm font-medium text-gray-500"
-                    htmlFor="video-game-steam-id"
+            <div className="inline-block w-full max-w-lg overflow-hidden text-left transition-all transform bg-white shadow-xl rounded-2xl">
+              <div className="bg-white w-full">
+                {/* Header */}
+                <div className="flex items-center justify-between p-4 border-b">
+                  <div className="flex items-center gap-2">
+                    <Plus className="h-5 w-5 text-blue-500" />
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Add Video Game
+                    </h2>
+                  </div>
+                  <button
+                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                    aria-label="Close"
                   >
-                    Video Game Steam Id
-                  </label>
-                  <div className="flex items-center gap-2  mb-4">
+                    <X className="h-5 w-5 text-gray-500" />
+                  </button>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleAddVideoGame} className="p-4 space-y-2">
+                  {/* Steam ID Field */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="steamId"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Video Game Steam Id
+                      </label>
+                      <div>
+                        <a className={`video-game-id flex`}>
+                          <button
+                            type="button"
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                            aria-label="Title Information"
+                          >
+                            <InformationCircleIcon className="w-5 h-5 text-gray-400" />
+                          </button>
+                        </a>
+                        <Tooltip anchorSelect={`.video-game-id`} place="top">
+                          <div className="max-w-lg text-xs">
+                            You can put video game id. It is same to stream id
+                            here.
+                          </div>
+                        </Tooltip>
+                      </div>
+                    </div>
                     <input
-                      id="video-game-steam-id"
                       type="text"
+                      id="steamId"
+                      name="steamId"
                       value={videoGameId}
                       onChange={(e) => setVideoGameId(e.target.value)}
-                      placeholder="Video Game Steam ID"
-                      className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                      placeholder="Enter Steam ID"
                     />
-                    <div>
-                      <a className={`video-game-id flex`}>
-                        <InformationCircleIcon className="w-5 h-5 text-gray-400" />
-                      </a>
-                      <Tooltip anchorSelect={`.video-game-id`} place="top">
-                        <div className="max-w-lg">
-                          You can put video game steam id
-                        </div>
-                      </Tooltip>
-                    </div>
                   </div>
-                  <label
-                    className="text-sm font-medium text-gray-500"
-                    htmlFor="video-game-title"
-                  >
-                    Vidoe Game Title
-                  </label>
-                  <div className="flex items-center gap-2 mb-4">
+
+                  {/* Title Field */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="title"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Video Game Title
+                      </label>
+                      {/* Tooltip for video game title */}
+                      <div>
+                        <a className={`video-game-title flex`}>
+                          <button
+                            type="button"
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                            aria-label="Title Information"
+                          >
+                            <InformationCircleIcon className="w-5 h-5 text-gray-400" />
+                          </button>
+                        </a>
+                        <Tooltip anchorSelect={`.video-game-title`} place="top">
+                          <div className="max-w-lg text-xs">
+                            You can put video game title
+                          </div>
+                        </Tooltip>
+                      </div>
+                    </div>
                     <input
-                      id="video-game-title"
                       type="text"
+                      id="title"
+                      name="title"
                       value={videoGameTitle}
                       onChange={(e) => setVideoGameTitle(e.target.value)}
-                      placeholder="Video Game Title"
-                      className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                      placeholder="Enter game title"
                     />
-                    <div>
-                      <a className={`video-game-title flex`}>
-                        <InformationCircleIcon className="w-5 h-5 text-gray-400" />
-                      </a>
-                      <Tooltip anchorSelect={`.video-game-title`} place="top">
-                        <div className="max-w-lg">
-                          You can put video game title
-                        </div>
-                      </Tooltip>
-                    </div>
                   </div>
-                  <label
-                    className="text-sm font-medium text-gray-500"
-                    htmlFor="video-game-description"
-                  >
-                    Vidoe Game Description
-                  </label>
-                  <div className="flex items-center gap-2  mb-4">
+                  {/* Description Field */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="description"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Video Game Description
+                      </label>
+                      <div>
+                        <a className={`video-game-description flex`}>
+                          <button
+                            type="button"
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                            aria-label="Title Information"
+                          >
+                            <InformationCircleIcon className="w-5 h-5 text-gray-400" />
+                          </button>
+                        </a>
+                        <Tooltip
+                          anchorSelect={`.video-game-description`}
+                          place="top"
+                        >
+                          <div className="max-w-lg text-xs">
+                            You can put video game description
+                          </div>
+                        </Tooltip>
+                      </div>
+                    </div>
                     <textarea
-                      id="video-game-description"
+                      id="description"
+                      name="description"
                       value={videoGameDesp}
                       onChange={(e) => setVideoGameDesp(e.target.value)}
-                      placeholder="Video Game Description"
-                      className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow resize-none"
+                      placeholder="Enter game description"
                     />
-                    <div>
-                      <a className={`video-game-description flex`}>
-                        <InformationCircleIcon className="w-5 h-5 text-gray-400" />
-                      </a>
-                      <Tooltip
-                        anchorSelect={`.video-game-description`}
-                        place="top"
-                      >
-                        <div className="max-w-lg">
-                          You can put video game description
-                        </div>
-                      </Tooltip>
-                    </div>
                   </div>
-                </div>
 
-                <div className="mt-6 flex justify-end space-x-3">
-                  <button
-                    onClick={() => handleCancel()}
-                    className="btn-secondary"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    disabled={isLoading}
-                    onClick={() => handleAddVideoGame()}
-                    className="btn-primary flex items-center justify-center"
-                  >
-                    {isLoading ? (
-                      <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
-                    ) : (
-                      <Plus className="w-5 h-5 mr-2" />
-                    )}
-                    ADD
-                  </button>
-                </div>
+                  {/* Action Buttons */}
+                  <div className="mt-6 flex justify-end space-x-3">
+                    <button
+                      onClick={() => handleCancel()}
+                      className="btn-secondary"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      disabled={isLoading}
+                      onClick={() => handleAddVideoGame()}
+                      className="btn-primary flex items-center justify-center"
+                    >
+                      {isLoading ? (
+                        <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                      ) : (
+                        <Plus className="w-5 h-5 mr-2" />
+                      )}
+                      ADD
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </Transition.Child>
