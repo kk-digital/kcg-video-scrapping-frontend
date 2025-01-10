@@ -154,7 +154,7 @@ export default function VideoGameProcessingView() {
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
                       <div className="max-w-96 truncate flex items-center gap-2 capitalize">
-                        {formatDateTimeReadable(videoGame.createdAt)}
+                        {formatDateTimeReadable(videoGame.created_at)}
                       </div>
                     </td>
                   </tr>
