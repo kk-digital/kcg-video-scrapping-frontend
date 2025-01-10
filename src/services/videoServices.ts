@@ -1,3 +1,4 @@
+import { INGRESS_VIDEO_STATUS } from "@/types/enums";
 import { api } from "@/utils/api";
 
 export const getIngressVideos = async (
@@ -34,8 +35,11 @@ export const getVideoById = async (id: string) => {
   return await api.get(`/api/v1/ingress-videos/${id}`);
 };
 
-export const getTotalCount = async (status: string | undefined = undefined) => {
+export const getTotalCount = async (
+  status: INGRESS_VIDEO_STATUS | undefined = undefined
+) => {
   try {
+    console.log(status);
     const url = status
       ? `/api/v1/ingress-videos/get-ingress-videos-count?status=${status}`
       : "/api/v1/ingress-videos/get-ingress-videos-count";

@@ -1,9 +1,11 @@
 "use client";
 
 import SpinLoader from "@/components/Loader/SpinLoader";
+import IngressVideoDetailedViewModal from "@/components/Modal/IngressVideoDetailedViewModal";
 import Pagination from "@/components/Pagination/Pagination";
 import { useIngressVideoFilter } from "@/contexts/FilterIngressVideoContext";
 import { useIngressVideos } from "@/contexts/IngressVideoContext";
+import { IngressVideoSchema } from "@/types";
 import { INGRESS_VIDEO_STATUS } from "@/types/enums";
 import { formatBytes, formatSecondsToHHMMSS } from "@/utils/format";
 import { ListBulletIcon } from "@heroicons/react/24/outline";
@@ -19,8 +21,8 @@ import {
   RefreshCwIcon,
   XCircleIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Tooltip } from "react-tooltip";
 
 const statusIcons: { [key: string]: JSX.Element } = {
   pending: <Clock className="w-5 h-5 text-yellow-500" />,
@@ -30,12 +32,20 @@ const statusIcons: { [key: string]: JSX.Element } = {
   failed: <AlertTriangleIcon className="w-5 h-5 text-red-500" />,
 };
 
+interface IngressVideoDetailedView {
+  isOpen: boolean;
+  video: IngressVideoSchema;
+}
+
 export default function VideoProcessingView({
   status = undefined,
 }: {
   status: INGRESS_VIDEO_STATUS | undefined;
 }) {
   const checkboxRef = useRef<HTMLInputElement>(null);
+  const [videoDetailedViewOpen, setVideoDetailedViewOpen] = useState<
+    IngressVideoDetailedView | undefined
+  >(); // description modal
   const { isLoading, totalCount, ingressVideos } = useIngressVideos();
   const { filterOptions, setFilterOptions } = useIngressVideoFilter();
   const [selectedItems, setSelectedItems] = useState(0);
@@ -46,6 +56,7 @@ export default function VideoProcessingView({
     setFilterOptions({
       ...filterOptions,
       status: status,
+      currentPage: 1,
     });
   }, []);
 
@@ -179,34 +190,32 @@ export default function VideoProcessingView({
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      <div className="truncate max-w-36 hover:underline">
-                        {video.video_title}
+                      <div className="flex items-center  hover:cursor-pointer">
+                        <PlayCircle className="w-4 h-4  text-gray-400 mr-2" />
+                        <span className="truncate max-w-56 hover:underline ">
+                          <Link href={video.video_url} target="_blank">
+                            {video.video_title}
+                          </Link>
+                        </span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      <div className="flex items-center  hover:cursor-pointer">
-                        <PlayCircle className="w-4 h-4  text-gray-400 mr-2" />
-                        <span className="truncate max-w-48 hover:underline ">
-                          {video.video_title}
-                        </span>
-                      </div>
-                      <a className={`video-description-${video.video_id} flex`}>
+                      <div
+                        className="flex gap-2"
+                        onClick={() => {
+                          setVideoDetailedViewOpen({
+                            isOpen: true,
+                            video,
+                          });
+                        }}
+                      >
                         <ListBulletIcon className="w-4 h-4  text-gray-400 mr-2" />
-                        <div className="max-w-48 text-left text-ellipsis line-clamp-2 text-xs hover:cursor-pointer text-gray-500">
-                          {video.video_description.length > 60
-                            ? video.video_description.slice(0, 60) + "..."
+                        <div className="max-w-56 text-left text-ellipsis line-clamp-2 text-xs hover:cursor-pointer text-gray-500">
+                          {video.video_description.length > 80
+                            ? video.video_description.slice(0, 80) + "..."
                             : video.video_description}
                         </div>
-                      </a>
-
-                      <Tooltip
-                        anchorSelect={`.video-description-${video.video_id}`}
-                        place="top"
-                      >
-                        <div className="max-w-lg">
-                          {video.video_description}
-                        </div>
-                      </Tooltip>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
                       <div className="flex items-center">
@@ -241,6 +250,16 @@ export default function VideoProcessingView({
           </div>
         )}
       </div>
+
+      {/* Video Detailed View Modal */}
+      {videoDetailedViewOpen && (
+        <IngressVideoDetailedViewModal
+          open={videoDetailedViewOpen.isOpen}
+          onClose={() => setVideoDetailedViewOpen(undefined)}
+          video={videoDetailedViewOpen.video}
+        />
+      )}
+
       {/* Pagination */}
       <div className="flex justify-end px-16">
         <Pagination

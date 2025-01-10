@@ -32,7 +32,9 @@ export const IngressVideosContextProvider = ({
   const { filterOptions } = useIngressVideoFilter();
 
   useEffect(() => {
-    fetchTotalCount();
+    fetchTotalCount({
+      status: filterOptions.status,
+    });
     fetchIngressVideos({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
@@ -66,8 +68,13 @@ export const IngressVideosContextProvider = ({
       });
   };
 
-  const fetchTotalCount = async () => {
-    getTotalCount().then((count) => {
+  const fetchTotalCount = async ({
+    status,
+  }: {
+    status: INGRESS_VIDEO_STATUS | undefined;
+  }) => {
+    getTotalCount(status).then((count) => {
+      console.log(count, "here");
       setTotalCount(count);
     });
   };
