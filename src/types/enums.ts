@@ -1,6 +1,6 @@
 export enum INGRESS_VIDEO_STATUS {
   PENDING = "pending",
-  DOWNLOAINDG = "downloading",
+  DOWNLOADINDG = "downloading",
   DOWNLOADED = "downloaded",
   FAILED = "failed",
   CANCELED = "canceled",
