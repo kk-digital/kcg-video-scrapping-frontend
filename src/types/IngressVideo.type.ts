@@ -16,5 +16,7 @@ export interface IngressVideoSchema {
   processed: boolean;
   game_id: string;
   upload_date: string;
+  started_at: string;
+  elapsed_time: number;
   status: INGRESS_VIDEO_STATUS;
 }

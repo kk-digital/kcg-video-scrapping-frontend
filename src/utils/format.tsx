@@ -16,7 +16,6 @@ export const formatBytes = (bytes: number) => {
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${Math.round(bytes / Math.pow(1024, i))} ${sizes[i]}`;
 };
-
 export function formatDateTimeReadable(dateTime: Date | string) {
   if (typeof dateTime === "string") {
     dateTime = new Date(dateTime);
@@ -26,43 +25,15 @@ export function formatDateTimeReadable(dateTime: Date | string) {
     return "N/A";
   }
 
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
   const year = dateTime.getFullYear();
-  const month = months[dateTime.getMonth()];
-  const day = days[dateTime.getDay()];
-  const date = dateTime.getDate();
-
+  const month = (dateTime.getMonth() + 1).toString().padStart(2, "0");
+  const date = dateTime.getDate().toString().padStart(2, "0");
   const hours = dateTime.getHours();
-  const minutes = dateTime.getMinutes();
+  const minutes = dateTime.getMinutes().toString().padStart(2, "0");
   const ampm = hours >= 12 ? "PM" : "AM";
-  const hour = hours % 12 || 12;
+  const hour = (hours % 12 || 12).toString().padStart(2, "0");
 
-  return `${day}, ${month} ${date}, ${year}, at ${hour}:${minutes
-    .toString()
-    .padStart(2, "0")} ${ampm}`;
+  return `${year}-${month}-${date} ${hour}:${minutes} ${ampm}`;
 }
 
 export const convertRawStringToDisplay = (rawString: string) => {

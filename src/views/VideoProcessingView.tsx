@@ -7,7 +7,11 @@ import { useIngressVideoFilter } from "@/contexts/FilterIngressVideoContext";
 import { useIngressVideos } from "@/contexts/IngressVideoContext";
 import { IngressVideoSchema } from "@/types";
 import { INGRESS_VIDEO_STATUS } from "@/types/enums";
-import { formatBytes, formatSecondsToHHMMSS } from "@/utils/format";
+import {
+  formatBytes,
+  formatDateTimeReadable,
+  formatSecondsToHHMMSS,
+} from "@/utils/format";
 import { ListBulletIcon } from "@heroicons/react/24/outline";
 import {
   Clock,
@@ -20,6 +24,8 @@ import {
   ChevronDownCircle,
   RefreshCwIcon,
   XCircleIcon,
+  Timer,
+  BarChart,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -171,13 +177,14 @@ export default function VideoProcessingView({
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200 text-sm">
                 {/* Example row */}
                 {ingressVideos.map((video, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                       <span className="flex items-center gap-2">
                         <input
                           type="checkbox"
@@ -189,7 +196,7 @@ export default function VideoProcessingView({
                         {video.video_id}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-gray-900">
                       <div className="flex items-center  hover:cursor-pointer">
                         <PlayCircle className="w-4 h-4  text-gray-400 mr-2" />
                         <span className="truncate max-w-56 hover:underline ">
@@ -199,7 +206,7 @@ export default function VideoProcessingView({
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-gray-900">
                       <div
                         className="flex gap-2"
                         onClick={() => {
@@ -217,27 +224,50 @@ export default function VideoProcessingView({
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-gray-900">
                       <div className="flex items-center">
                         {video.video_resolution}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-gray-900">
                       <div className="flex items-center">
                         {video.video_frame_rate}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-gray-900">
                       <div className="flex items-center">
                         {formatSecondsToHHMMSS(video.video_length)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-gray-900">
                       <div className="flex items-center">
                         {formatBytes(video.video_filesize)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="py-4 px-6 text-xs">
+                      <div className="space-y-0.5 min-w-56">
+                        <div className="flex items-center">
+                          <Clock className="w-3 h-3 mr-2 text-blue-500" />
+                          <span className="font-bold">Started At:</span>
+                          <span className="ml-2">
+                            {formatDateTimeReadable(video.started_at)}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <Timer className="w-3 h-3 mr-2 text-green-500" />
+                          <span className="font-bold">Elapsed Time:</span>
+                          <span className="ml-2">
+                            {video.elapsed_time ? video.elapsed_time : "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <BarChart className="w-3 h-3 mr-2 text-yellow-500" />
+                          <span className="font-bold">Progress:</span>
+                          <span className="ml-2">50%</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-900">
                       <div className="flex items-center gap-2 capitalize">
                         {statusIcons[video.status]}
                         {video.status}
