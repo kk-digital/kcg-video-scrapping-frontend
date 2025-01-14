@@ -29,28 +29,28 @@ export const IngressVideosContextProvider = ({
   const [isLoading, setIsLoading] = useState(true);
   const [ingressVideos, setIngressVideos] = useState<IngressVideoSchema[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [ws, setWs] = useState<WebSocket | null>(null);
   const { filterOptions } = useIngressVideoFilter();
+  
+  // const [ws, setWs] = useState<WebSocket | null>(null);
+  // useEffect(() => {
+  //   const websocket = new WebSocket(
+  //     `${process.env.NEXT_PUBLIC_API_URL?.replace(
+  //       "http",
+  //       "ws"
+  //     )}/ws/downloading-videos`
+  //   );
 
-  useEffect(() => {
-    const websocket = new WebSocket(
-      `${process.env.NEXT_PUBLIC_API_URL?.replace(
-        "http",
-        "ws"
-      )}/ws/downloading-videos`
-    );
+  //   websocket.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     console.log(data);
+  //   };
 
-    websocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log("progress_bar", data);
-    };
+  //   setWs(websocket);
 
-    setWs(websocket);
-
-    return () => {
-      websocket.close();
-    };
-  }, []);
+  //   return () => {
+  //     websocket.close();
+  //   };
+  // }, []);
 
   useEffect(() => {
     fetchTotalCount({
