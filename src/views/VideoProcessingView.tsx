@@ -244,7 +244,7 @@ export default function VideoProcessingView({
                         {formatBytes(video.video_filesize)}
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-xs">
+                    <td className="py-4 px-6 text-xs text-gray-900">
                       <div className="space-y-0.5 min-w-56">
                         <div className="flex items-center">
                           <Clock className="w-3 h-3 mr-2 text-blue-500" />
