@@ -6,6 +6,10 @@ export interface QueryFilterOption {
   pageSize: number;
   query: string;
   status: QUERY_STATUS | undefined;
+  fromDate: Date | undefined;
+  toDate: Date | undefined;
+  orderBy: string;
+  isAscending: boolean | undefined;
 }
 
 interface QueryFilterContextType {
@@ -27,6 +31,10 @@ export const QueryFilterContextProvider = ({
     pageSize: 10,
     query: "",
     status: undefined,
+    fromDate: undefined,
+    toDate: undefined,
+    orderBy: "",
+    isAscending: undefined,
   });
 
   return (

@@ -1,12 +1,30 @@
 import { QueryCreateSchema } from "@/types";
 import { api } from "@/utils/api";
 
+interface FetchQueriesProps {
+  offset: number;
+  limit: number;
+  query?: string;
+  status?: string;
+  fromDate?: string;
+  toDate?: string;
+  orderBy?: string;
+  isAscending?: boolean;
+}
+
 export const getQueries = async (
-  offset: number,
-  limit: number,
-  query: string = "",
-  status: string | undefined = undefined
+  data: FetchQueriesProps = { offset: 0, limit: 20 }
 ) => {
+  const {
+    offset,
+    limit,
+    query,
+    status,
+    fromDate,
+    toDate,
+    orderBy,
+    isAscending,
+  } = data;
   let url = "";
   const base_url = "/api/v1/search-queries/list-search-queries";
   if (status) {
@@ -17,6 +35,19 @@ export const getQueries = async (
 
   if (query) {
     url += `&query=${query}`;
+  }
+
+  if (orderBy) {
+    url += `&order_by=${orderBy}`;
+  }
+  if (isAscending !== undefined) {
+    url += `&is_ascending=${isAscending}`;
+  }
+  if (fromDate) {
+    url += `&from_date=${fromDate}`;
+  }
+  if (toDate) {
+    url += `&to_date=${toDate}`;
   }
 
   try {

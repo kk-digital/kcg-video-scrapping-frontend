@@ -38,6 +38,10 @@ export const QueriesContextProvider = ({
       pageSize: filterOptions.pageSize,
       query: filterOptions.query,
       status: filterOptions.status,
+      fromDate: filterOptions.fromDate?.toISOString().slice(0, -5),
+      toDate: filterOptions.toDate?.toISOString().slice(0, -5),
+      orderBy: filterOptions.orderBy,
+      isAscending: filterOptions.isAscending,
     });
   }, [filterOptions]);
 
@@ -46,16 +50,33 @@ export const QueriesContextProvider = ({
     pageSize,
     query,
     status,
+    fromDate = undefined,
+    toDate = undefined,
+    orderBy = "",
+    isAscending = undefined,
   }: {
     currentPage: number;
     pageSize: number;
     query: string;
     status: QUERY_STATUS | undefined;
+    fromDate?: string;
+    toDate?: string;
+    isAscending: boolean | undefined;
+    orderBy: string;
   }) => {
     setIsLoading(true);
     const offset = pageSize * (currentPage - 1);
     const limit = pageSize;
-    getQueries(offset, limit, query, status)
+    getQueries({
+      offset,
+      limit,
+      query,
+      status,
+      fromDate,
+      toDate,
+      orderBy,
+      isAscending,
+    })
       .then((queries: QuerySchema[]) => {
         setIsLoading(false);
         setQueries(queries);
@@ -78,6 +99,10 @@ export const QueriesContextProvider = ({
       pageSize: filterOptions.pageSize,
       query: filterOptions.query,
       status: filterOptions.status,
+      fromDate: filterOptions.fromDate?.toISOString().slice(0, -5),
+      toDate: filterOptions.toDate?.toISOString().slice(0, -5),
+      orderBy: filterOptions.orderBy,
+      isAscending: filterOptions.isAscending,
     });
   };
 
