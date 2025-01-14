@@ -19,7 +19,7 @@ export const VideoGameSelect = ({
       className="w-full p-2 border rounded-md bg-background text-foreground"
     >
       <option value="">Select a Video Game</option>
-      {videoGames.map((videoGame) => (
+      {videoGames?.map((videoGame) => (
         <option key={videoGame.game_id} value={videoGame.game_id}>
           {videoGame.title}
         </option>

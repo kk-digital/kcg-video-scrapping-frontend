@@ -5,6 +5,8 @@ export interface VideoGameFilterOption {
   pageSize: number;
   videoGameTitle: string;
   videoGameId: string;
+  fromDate: Date | undefined;
+  toDate: Date | undefined;
   orderBy: string;
   isAscending: boolean | undefined;
 }
@@ -28,6 +30,8 @@ export const VideoGameFilterContextProvider = ({
     pageSize: 10,
     videoGameTitle: "",
     videoGameId: "",
+    fromDate: undefined,
+    toDate: undefined,
     orderBy: "",
     isAscending: undefined,
   });

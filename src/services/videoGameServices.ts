@@ -1,15 +1,25 @@
 import { VideoGameSchema } from "@/types";
 import { api } from "@/utils/api";
 
+interface FetchVideoGamesProps {
+  offset: number;
+  limit: number;
+  title?: string;
+  fromDate?: string;
+  toDate?: string;
+  orderBy?: string;
+  isAscending?: boolean;
+}
+
 export const getVideoGames = async (
-  offset: number,
-  limit: number,
-  title: string,
-  orderBy: string,
-  isAscending: boolean | undefined
+  data: FetchVideoGamesProps = { offset: 0, limit: 20 }
 ) => {
+  const { offset, limit, title, fromDate, toDate, orderBy, isAscending } = data;
   let url = "";
   const base_url = "/api/v1/video-games/list-video-games";
+  if (!offset || !limit) {
+    return;
+  }
   url = `${base_url}?offset=${offset}&limit=${limit}`;
 
   if (title) {
@@ -21,6 +31,14 @@ export const getVideoGames = async (
   if (isAscending !== undefined) {
     url += `&is_ascending=${isAscending}`;
   }
+  if (fromDate) {
+    url += `&from_date=${fromDate}`;
+  }
+  if (toDate) {
+    url += `&to_date=${toDate}`;
+  }
+
+  console.log(fromDate, toDate);
 
   try {
     const response = await api.get(url);

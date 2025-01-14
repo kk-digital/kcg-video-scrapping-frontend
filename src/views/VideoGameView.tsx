@@ -32,7 +32,7 @@ export default function VideoGameProcessingView() {
         setShowBulkActions(false);
       }
     }
-  }, [selectedItems, videoGames.length]);
+  }, [selectedItems, videoGames?.length]);
 
   const handleBuckCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
@@ -152,7 +152,7 @@ export default function VideoGameProcessingView() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {/* Example row */}
-                {videoGames.map((videoGame, index) => (
+                {videoGames?.map((videoGame, index) => (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <span className="flex items-center gap-2">

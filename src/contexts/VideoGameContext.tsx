@@ -36,6 +36,8 @@ export const VideoGamesContextProvider = ({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
       title: filterOptions.videoGameTitle,
+      fromDate: filterOptions.fromDate?.toISOString().slice(0, -5),
+      toDate: filterOptions.toDate?.toISOString().slice(0, -5),
       orderBy: filterOptions.orderBy,
       isAscending: filterOptions.isAscending,
     });
@@ -45,19 +47,31 @@ export const VideoGamesContextProvider = ({
     currentPage,
     pageSize,
     title = "",
+    fromDate = undefined,
+    toDate = undefined,
     orderBy = "",
     isAscending = undefined,
   }: {
     currentPage: number;
     pageSize: number;
     title: string;
+    fromDate?: string;
+    toDate?: string;
     isAscending: boolean | undefined;
     orderBy: string;
   }) => {
     setIsLoading(true);
     const offset = pageSize * (currentPage - 1);
     const limit = pageSize;
-    getVideoGames(offset, limit, title, orderBy, isAscending)
+    getVideoGames({
+      offset,
+      limit,
+      title,
+      fromDate,
+      toDate,
+      orderBy,
+      isAscending,
+    })
       .then((videoGames: VideoGameSchema[]) => {
         setIsLoading(false);
         setVideoGames(videoGames);
@@ -79,6 +93,8 @@ export const VideoGamesContextProvider = ({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
       title: filterOptions.videoGameTitle,
+      fromDate: filterOptions.fromDate?.toISOString().slice(0, -5),
+      toDate: filterOptions.toDate?.toISOString().slice(0, -5),
       orderBy: filterOptions.orderBy,
       isAscending: filterOptions.isAscending,
     });
