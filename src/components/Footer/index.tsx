@@ -12,6 +12,7 @@ interface DiskSpace {
 
 const Footer: React.FC = () => {
   const [diskSpace, setDiskSpace] = useState<DiskSpace | null>(null);
+  const [activeCount, setActiveCount] = useState<number>(0);
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
@@ -24,12 +25,15 @@ const Footer: React.FC = () => {
 
     websocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.type === "disk_space") {
+      if (data.type === "download_status") {
+        const diskSpace = data.disk_space;
+        const activeCount = data.active_downloads_count ?? 0;
         setDiskSpace({
-          free: data.free,
-          total: data.total,
-          percent: data.percent,
+          free: diskSpace.free,
+          total: diskSpace.total,
+          percent: diskSpace.percent,
         });
+        setActiveCount(activeCount);
       }
     };
 
@@ -42,7 +46,7 @@ const Footer: React.FC = () => {
 
   return (
     <div className="flex items-center justify-between bg-white border-gray-100 rounded-lg p-1">
-      <ScrappingStatus />
+      <ScrappingStatus activeCount={activeCount} />
       <DiskSpaceUsage
         totalSpace={diskSpace?.total ?? 0}
         freeSpace={diskSpace?.free ?? 0}
