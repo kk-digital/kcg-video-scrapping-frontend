@@ -32,7 +32,12 @@ export const QueriesContextProvider = ({
   const { filterOptions } = useQueryFilter();
 
   useEffect(() => {
-    fetchTotalCount();
+    fetchTotalCount({
+      status: filterOptions.status,
+      query: filterOptions.query,
+      fromDate: filterOptions.fromDate?.toISOString().slice(0, -5),
+      toDate: filterOptions.toDate?.toISOString().slice(0, -5),
+    });
     fetchQueries({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
@@ -87,8 +92,23 @@ export const QueriesContextProvider = ({
       });
   };
 
-  const fetchTotalCount = async () => {
-    getTotalCount().then((count) => {
+  const fetchTotalCount = async ({
+    status,
+    query,
+    fromDate,
+    toDate,
+  }: {
+    query?: string;
+    status?: string;
+    fromDate?: string;
+    toDate?: string;
+  }) => {
+    getTotalCount({
+      status,
+      query,
+      fromDate,
+      toDate,
+    }).then((count) => {
       setTotalCount(count);
     });
   };

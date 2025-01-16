@@ -63,12 +63,36 @@ export const getQueries = async (
   }
 };
 
-export const getTotalCount = async (status: string | undefined = undefined) => {
+export const getTotalCount = async ({
+  query,
+  status,
+  fromDate,
+  toDate,
+}: {
+  query?: string,
+  status?: string,
+  fromDate?: string,
+  toDate?: string,
+}
+) => {
   try {
-    const url = status
-      ? `/api/v1/search-queries/get-search-queries-count?status=${status}`
-      : "/api/v1/search-queries/get-search-queries-count";
-
+    let url = "";
+    const base_url  = "/api/v1/search-queries/get-search-queries-count"
+    if (status) {
+      url = `${base_url}?&status=${status}`;
+    } else {
+      url = `${base_url}?`;
+    }
+    if (query) {
+      url += `&query=${query}`;
+    }
+    if (fromDate) {
+      url += `&from_date=${fromDate}`;
+    }
+    if (toDate) {
+      url += `&to_date=${toDate}`;
+    }
+    
     const response = await api.get(url);
     return response.data.success ? response.data.data : 0;
   } catch (error) {
