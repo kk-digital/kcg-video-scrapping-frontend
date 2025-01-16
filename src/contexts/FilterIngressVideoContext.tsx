@@ -6,6 +6,8 @@ export interface IngressVideoFilterOption {
   pageSize: number;
   title: string;
   status: INGRESS_VIDEO_STATUS | undefined;
+  orderBy: string;
+  isAscending: boolean | undefined;
 }
 
 interface IngressVideoFilterContextType {
@@ -27,6 +29,8 @@ export const IngressVideoFilterContextProvider = ({
     pageSize: 10,
     title: "",
     status: undefined,
+    orderBy: "",
+    isAscending: undefined,
   });
 
   return (

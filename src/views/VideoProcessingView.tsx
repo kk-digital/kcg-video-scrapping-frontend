@@ -3,6 +3,7 @@
 import SpinLoader from "@/components/Loader/SpinLoader";
 import IngressVideoDetailedViewModal from "@/components/Modal/IngressVideoDetailedViewModal";
 import Pagination from "@/components/Pagination/Pagination";
+import SortableHeader from "@/components/Table/SortableHeader";
 import { useIngressVideoFilter } from "@/contexts/FilterIngressVideoContext";
 import { useIngressVideos } from "@/contexts/IngressVideoContext";
 import { IngressVideoSchema } from "@/types";
@@ -103,6 +104,15 @@ export default function VideoProcessingView({
     }
   };
 
+  const handleChangeSort = (label: string) => {
+    setFilterOptions({
+      ...filterOptions,
+      orderBy: label,
+      isAscending:
+        filterOptions.orderBy === label ? !filterOptions.isAscending : true,
+    });
+  };
+
   return (
     <>
       {/* Bulk Actions Bar */}
@@ -163,16 +173,40 @@ export default function VideoProcessingView({
                     Description
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Resolution
+                    <SortableHeader
+                      label="resolution"
+                      value="video_resolution"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    FPS
+                    <SortableHeader
+                      label="fps"
+                      value="video_frame_rate"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Length
+                    <SortableHeader
+                      label="length"
+                      value="video_length"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    File Size
+                    <SortableHeader
+                      label="file size"
+                      value="video_filesize"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
