@@ -49,10 +49,27 @@ export const getVideoGames = async (
   }
 };
 
-export const getTotalCount = async () => {
+export const getTotalCount = async ({
+  title,
+  fromDate,
+  toDate,
+}: {
+  title?: string,
+  fromDate?: string,
+  toDate?: string,
+}) => {
   try {
-    const url = "/api/v1/video-games/get-video-games-count";
+    let url = "/api/v1/video-games/get-video-games-count?";
 
+    if (title) {
+      url += `&title=${title}`;
+    }
+    if (fromDate) {
+      url += `&from_date=${fromDate}`;
+    }
+    if (toDate) {
+      url += `&to_date=${toDate}`;
+    }
     const response = await api.get(url);
     return response.data.success ? response.data.data : 0;
   } catch (error) {

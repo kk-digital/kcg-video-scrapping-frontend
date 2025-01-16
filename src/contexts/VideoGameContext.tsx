@@ -31,7 +31,11 @@ export const VideoGamesContextProvider = ({
   const { filterOptions } = useVideoGameFilter();
 
   useEffect(() => {
-    fetchTotalCount();
+    fetchTotalCount({
+      title: filterOptions.videoGameTitle,
+      fromDate: filterOptions.fromDate?.toISOString().slice(0, -5),
+      toDate: filterOptions.toDate?.toISOString().slice(0, -5),
+    });
     fetchVideoGames({
       currentPage: filterOptions.currentPage,
       pageSize: filterOptions.pageSize,
@@ -82,8 +86,20 @@ export const VideoGamesContextProvider = ({
       });
   };
 
-  const fetchTotalCount = async () => {
-    getTotalCount().then((count) => {
+  const fetchTotalCount = async ({
+    title,
+    fromDate,
+    toDate,
+  }: {
+    title?: string;
+    fromDate?: string;
+    toDate?: string;
+  }) => {
+    getTotalCount({
+      title,
+      fromDate,
+      toDate
+    }).then((count) => {
       setTotalCount(count);
     });
   };
