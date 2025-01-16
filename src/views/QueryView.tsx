@@ -2,6 +2,7 @@
 
 import SpinLoader from "@/components/Loader/SpinLoader";
 import Pagination from "@/components/Pagination/Pagination";
+import SortableHeader from "@/components/Table/SortableHeader";
 import { useQueryFilter } from "@/contexts/FilterQueryContext";
 import { useQuries } from "@/contexts/QueriesContext";
 import { deleteQueries } from "@/services/queryServices";
@@ -107,6 +108,15 @@ export default function QueryProcessingView({
     }
   };
 
+  const handleChangeSort = (label: string) => {
+    setFilterOptions({
+      ...filterOptions,
+      orderBy: label,
+      isAscending:
+        filterOptions.orderBy === label ? !filterOptions.isAscending : true,
+    });
+  };
+
   return (
     <>
       {/* Bulk Actions Bar */}
@@ -150,13 +160,31 @@ export default function QueryProcessingView({
                     ID
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Query
+                    <SortableHeader
+                      label="query"
+                      value="query"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-36 overflow-hidden text-ellipsis">
-                    Created
+                    <SortableHeader
+                      label="created"
+                      value="created_at"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
+                    <SortableHeader
+                      label="status"
+                      value="status"
+                      orderBy={filterOptions.orderBy}
+                      isAscending={filterOptions.isAscending}
+                      handleChangeSort={handleChangeSort}
+                    />
                   </th>
                 </tr>
               </thead>
