@@ -1,19 +1,31 @@
 import { INGRESS_VIDEO_STATUS } from "@/types/enums";
 import { api } from "@/utils/api";
 
+interface FetchIngressVideoProps {
+  offset: number;
+  limit: number;
+  title?: string;
+  status?: string;
+  orderBy?: string;
+  isAscending?: boolean;
+}
+
 export const getIngressVideos = async (
-  offset: number,
-  limit: number,
-  title: string = "",
-  status: string | undefined = undefined
+  data: FetchIngressVideoProps = { offset: 0, limit: 20 }
 ) => {
+  const { offset, limit, title, status, orderBy, isAscending } = data;
   let url = "";
   if (status) {
     url = `/api/v1/ingress-videos/list-ingress-videos?offset=${offset}&limit=${limit}&status=${status}`;
   } else {
     url = `/api/v1/ingress-videos/list-ingress-videos?offset=${offset}&limit=${limit}`;
   }
-
+  if (orderBy) {
+    url += `&order_by=${orderBy}`;
+  }
+  if (isAscending !== undefined) {
+    url += `&is_ascending=${isAscending}`;
+  }
   if (title) {
     url += `&title=${title}`;
   }

@@ -1,4 +1,7 @@
-import { getIngressVideos, getTotalCount } from "@/services/videoServices";
+import {
+  getIngressVideos,
+  getTotalCount,
+} from "@/services/ingressVideoServices";
 import { IngressVideoSchema } from "@/types";
 import {
   createContext,
@@ -30,7 +33,7 @@ export const IngressVideosContextProvider = ({
   const [ingressVideos, setIngressVideos] = useState<IngressVideoSchema[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const { filterOptions } = useIngressVideoFilter();
-  
+
   // const [ws, setWs] = useState<WebSocket | null>(null);
   // useEffect(() => {
   //   const websocket = new WebSocket(
@@ -61,6 +64,8 @@ export const IngressVideosContextProvider = ({
       pageSize: filterOptions.pageSize,
       title: filterOptions.title,
       status: filterOptions.status,
+      orderBy: filterOptions.orderBy,
+      isAscending: filterOptions.isAscending,
     });
   }, [filterOptions]);
 
@@ -69,16 +74,20 @@ export const IngressVideosContextProvider = ({
     pageSize,
     title = "",
     status = undefined,
+    orderBy = "",
+    isAscending = undefined,
   }: {
     currentPage: number;
     pageSize: number;
     title: string;
     status: INGRESS_VIDEO_STATUS | undefined;
+    isAscending: boolean | undefined;
+    orderBy: string;
   }) => {
     setIsLoading(true);
     const offset = pageSize * (currentPage - 1);
     const limit = pageSize;
-    getIngressVideos(offset, limit, title, status)
+    getIngressVideos({ offset, limit, title, status, orderBy, isAscending })
       .then((ingressVideos: IngressVideoSchema[]) => {
         setIsLoading(false);
         setIngressVideos(ingressVideos);
@@ -106,6 +115,8 @@ export const IngressVideosContextProvider = ({
       pageSize: filterOptions.pageSize,
       title: filterOptions.title,
       status: filterOptions.status,
+      orderBy: filterOptions.orderBy,
+      isAscending: filterOptions.isAscending,
     });
   };
 
