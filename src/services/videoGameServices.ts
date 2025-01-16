@@ -17,9 +17,7 @@ export const getVideoGames = async (
   const { offset, limit, title, fromDate, toDate, orderBy, isAscending } = data;
   let url = "";
   const base_url = "/api/v1/video-games/list-video-games";
-  if (!offset || !limit) {
-    return;
-  }
+
   url = `${base_url}?offset=${offset}&limit=${limit}`;
 
   if (title) {
@@ -37,8 +35,6 @@ export const getVideoGames = async (
   if (toDate) {
     url += `&to_date=${toDate}`;
   }
-
-  console.log(fromDate, toDate);
 
   try {
     const response = await api.get(url);
