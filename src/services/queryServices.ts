@@ -69,15 +69,14 @@ export const getTotalCount = async ({
   fromDate,
   toDate,
 }: {
-  query?: string,
-  status?: string,
-  fromDate?: string,
-  toDate?: string,
-}
-) => {
+  query?: string;
+  status?: string;
+  fromDate?: string;
+  toDate?: string;
+}) => {
   try {
     let url = "";
-    const base_url  = "/api/v1/search-queries/get-search-queries-count"
+    const base_url = "/api/v1/search-queries/get-search-queries-count";
     if (status) {
       url = `${base_url}?&status=${status}`;
     } else {
@@ -92,7 +91,7 @@ export const getTotalCount = async ({
     if (toDate) {
       url += `&to_date=${toDate}`;
     }
-    
+
     const response = await api.get(url);
     return response.data.success ? response.data.data : 0;
   } catch (error) {
@@ -122,6 +121,17 @@ export const deleteQueries = async (queryIds: string[]) => {
     return response.data.success;
   } catch (error) {
     console.error("Error deleting search queries:", error);
+    throw error;
+  }
+};
+
+export const deleteQuery = async (id: string) => {
+  try {
+    const url = `/api/v1/search-queries/delete-search-query?query_id=${id}`;
+    const response = await api.delete(url);
+    return response.data.success;
+  } catch (error) {
+    console.error("Error deleting query:", error);
     throw error;
   }
 };

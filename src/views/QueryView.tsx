@@ -5,7 +5,7 @@ import Pagination from "@/components/Pagination/Pagination";
 import SortableHeader from "@/components/Table/SortableHeader";
 import { useQueryFilter } from "@/contexts/FilterQueryContext";
 import { useQuries } from "@/contexts/QueriesContext";
-import { deleteQueries } from "@/services/queryServices";
+import { deleteQueries, deleteQuery } from "@/services/queryServices";
 import { QUERY_STATUS } from "@/types/enums";
 import { formatDateTimeReadable } from "@/utils/format";
 import {
@@ -15,6 +15,8 @@ import {
   AlertTriangleIcon,
   XCircleIcon,
   CheckCheck,
+  PenIcon,
+  TrashIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -83,7 +85,7 @@ export default function QueryProcessingView({
     }
   };
 
-  const handleDelete = () => {
+  const handleDeleteQueries = () => {
     if (selectedQueryIds.length > 0) {
       deleteQueries(selectedQueryIds)
         .then((success) => {
@@ -117,6 +119,17 @@ export default function QueryProcessingView({
     });
   };
 
+  const handleDeleteQuery = (queryId: string) => {
+    deleteQuery(queryId).then((success) => {
+      if (success) {
+        refreshQueries();
+        toast.success("Successfully deleted");
+      } else {
+        toast.success("Failed to delete");
+      }
+    });
+  };
+
   return (
     <>
       {/* Bulk Actions Bar */}
@@ -139,7 +152,7 @@ export default function QueryProcessingView({
           <div className="flex items-center gap-2">
             <button
               className="btn-warning text-sm px-3 py-1 flex items-center gap-1"
-              onClick={() => handleDelete()}
+              onClick={() => handleDeleteQueries()}
             >
               <XCircleIcon className="w-4 h-4" />
               Delete
@@ -216,6 +229,20 @@ export default function QueryProcessingView({
                       <div className="flex items-center gap-2 capitalize">
                         {statusIcons[query.status]}
                         {query.status}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      <div className="flex gap-2 items-center">
+                        <PenIcon
+                          className="w-4 h-4 stroke-blue-500 hover:stroke-blue-700 hover:cursor-pointer"
+                          onClick={() => {}}
+                        />
+                        <TrashIcon
+                          className="w-4 h-4 stroke-red-500 hover:stroke-red-700 hover:cursor-pointer"
+                          onClick={() => {
+                            handleDeleteQuery(query.id);
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>
