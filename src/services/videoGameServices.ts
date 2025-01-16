@@ -54,9 +54,9 @@ export const getTotalCount = async ({
   fromDate,
   toDate,
 }: {
-  title?: string,
-  fromDate?: string,
-  toDate?: string,
+  title?: string;
+  fromDate?: string;
+  toDate?: string;
 }) => {
   try {
     let url = "/api/v1/video-games/get-video-games-count?";
@@ -86,6 +86,17 @@ export const addVideoGame = async (videoGame: VideoGameSchema) => {
     return response.data.success;
   } catch (error) {
     console.error("Error adding video game:", error);
+    throw error;
+  }
+};
+
+export const deleteVideoGame = async (id: string) => {
+  try {
+    const url = `/api/v1/video-games/delete-video-game?game_id=${id}`;
+    const response = await api.delete(url);
+    return response.data.success;
+  } catch (error) {
+    console.error("Error deleting video game:", error);
     throw error;
   }
 };

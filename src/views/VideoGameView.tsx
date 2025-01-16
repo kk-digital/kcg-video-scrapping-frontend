@@ -5,9 +5,13 @@ import Pagination from "@/components/Pagination/Pagination";
 import SortableHeader from "@/components/Table/SortableHeader";
 import { useVideoGameFilter } from "@/contexts/FilterVideoGameContext";
 import { useVideoGames } from "@/contexts/VideoGameContext";
-import { deleteVideoGames } from "@/services/videoGameServices";
+import {
+  deleteVideoGame,
+  deleteVideoGames,
+} from "@/services/videoGameServices";
+import { VideoGameSchema } from "@/types";
 import { formatDateTimeReadable } from "@/utils/format";
-import { XCircleIcon } from "lucide-react";
+import { PenIcon, TrashIcon, XCircleIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -16,6 +20,7 @@ export default function VideoGameProcessingView() {
   const { refreshVideoGames } = useVideoGames();
   const { filterOptions, setFilterOptions } = useVideoGameFilter();
   const { isLoading, videoGames, totalCount } = useVideoGames();
+  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState();
   const [selectedItems, setSelectedItems] = useState(0);
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [selectedVideoGameIds, setSelectedVideoGameIds] = useState<string[]>(
@@ -76,6 +81,21 @@ export default function VideoGameProcessingView() {
       orderBy: label,
       isAscending:
         filterOptions.orderBy === label ? !filterOptions.isAscending : true,
+    });
+  };
+
+  const handleUpate = (videoGame: VideoGameSchema) => {
+    //  TODO: add logic to update video game
+  };
+
+  const handleDeleteVideoGame = (videoGameId: string) => {
+    deleteVideoGame(videoGameId).then((success) => {
+      if (success) {
+        refreshVideoGames();
+        toast.success("Successfully deleted");
+      } else {
+        toast.success("Failed to delete!");
+      }
     });
   };
 
@@ -148,6 +168,7 @@ export default function VideoGameProcessingView() {
                       handleChangeSort={handleChangeSort}
                     />
                   </th>
+                  <th className="px-6 py-4"></th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -187,6 +208,20 @@ export default function VideoGameProcessingView() {
                     <td className="px-6 py-4 text-sm text-gray-900">
                       <div className="max-w-96 truncate flex items-center gap-2 capitalize">
                         {formatDateTimeReadable(videoGame.created_at)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      <div className="flex gap-2 items-center">
+                        <PenIcon
+                          className="w-4 h-4 stroke-blue-500 hover:stroke-blue-700 hover:cursor-pointer"
+                          onClick={() => {}}
+                        />
+                        <TrashIcon
+                          className="w-4 h-4 stroke-red-500 hover:stroke-red-700 hover:cursor-pointer"
+                          onClick={() => {
+                            handleDeleteVideoGame(videoGame.game_id);
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>
