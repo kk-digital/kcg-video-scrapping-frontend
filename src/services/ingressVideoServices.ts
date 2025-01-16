@@ -48,14 +48,17 @@ export const getVideoById = async (id: string) => {
 };
 
 export const getTotalCount = async (
-  status: INGRESS_VIDEO_STATUS | undefined = undefined
+  status: INGRESS_VIDEO_STATUS | undefined = undefined,
+  title?: string
 ) => {
   try {
     console.log(status);
-    const url = status
+    let url = status
       ? `/api/v1/ingress-videos/get-ingress-videos-count?status=${status}`
       : "/api/v1/ingress-videos/get-ingress-videos-count";
-
+    if (title) {
+      url += `&title=${title}`;
+    }
     const response = await api.get(url);
     return response.data.success ? response.data.data : 0;
   } catch (error) {

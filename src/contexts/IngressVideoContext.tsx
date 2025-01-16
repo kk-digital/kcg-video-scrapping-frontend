@@ -58,6 +58,7 @@ export const IngressVideosContextProvider = ({
   useEffect(() => {
     fetchTotalCount({
       status: filterOptions.status,
+      title: filterOptions.title,
     });
     fetchIngressVideos({
       currentPage: filterOptions.currentPage,
@@ -100,10 +101,12 @@ export const IngressVideosContextProvider = ({
 
   const fetchTotalCount = async ({
     status,
+    title,
   }: {
     status: INGRESS_VIDEO_STATUS | undefined;
+    title?: string;
   }) => {
-    getTotalCount(status).then((count) => {
+    getTotalCount(status, title).then((count) => {
       console.log(count, "here");
       setTotalCount(count);
     });
