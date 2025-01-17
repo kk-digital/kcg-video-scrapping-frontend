@@ -49,6 +49,17 @@ export const getVideoGames = async (
   }
 };
 
+export const getVideoGame = async (id: string) => {
+  try {
+    const url = `/api/v1/video-games/get-video-game-by-game-id?game_id=${id}`;
+    const response = await api.get(url);
+    return response.data.success ? response.data.data : undefined;
+  } catch (error) {
+    console.error("Error fetching video game:", error);
+    return undefined;
+  }
+};
+
 export const getTotalCount = async ({
   title,
   fromDate,
