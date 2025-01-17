@@ -128,7 +128,7 @@ export default function VideoProcessingView({
         {showBulkActions && (
           <div className="flex items-center gap-2">
             <button
-              className="btn-secondary text-sm px-3 py-1 flex items-center gap-1"
+              className="btn-secondary text-sm px-3 py-1 flex items-center gap-1 bg-green-500 hover:bg-green-600"
               onClick={() => {
                 handleRetry();
               }}
