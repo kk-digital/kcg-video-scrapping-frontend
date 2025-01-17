@@ -1,36 +1,23 @@
 import { Calendar, CirclePlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import AddQueryModal from "../Modal/AddQueryModal";
+import QueryFormModal from "../Modal/QueryFormModal";
 import { QueryCreateSchema, VideoGameSchema } from "@/types";
 import { getVideoGames } from "@/services/videoGameServices";
 import { useQueryFilter } from "@/contexts/FilterQueryContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { addQuery } from "@/services/queryServices";
+import { useQuries } from "@/contexts/QueriesContext";
 
 export default function Toolbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [videoGames, setVideoGames] = useState<VideoGameSchema[]>([]);
   const { filterOptions, setFilterOptions } = useQueryFilter();
-  const fetchVideoGames = async () => {
-    getVideoGames({ offset: 0, limit: 9999999 })
-      .then((videoGames: VideoGameSchema[]) => {
-        setLoading(false);
-        setVideoGames(videoGames);
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.error(error);
-      });
-  };
+  const { refreshQueries } = useQuries();
 
-  useEffect(() => {
-    fetchVideoGames();
-  }, []);
-
-  const handleAdd = (selectedVideos: QueryCreateSchema) => {
-    console.log("Selected videos:", selectedVideos);
-    setIsModalOpen(false);
+  const handleAdd = async (queryData: QueryCreateSchema): Promise<boolean> => {
+    const success = await addQuery(queryData);
+    refreshQueries();
+    return success;
   };
 
   return (
@@ -90,22 +77,17 @@ export default function Toolbar() {
         </div>
       </div>
       <div className="flex gap-2">
-        {loading ? (
-          <div>Loading video games...</div>
-        ) : (
-          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
-            <span className="flex items-center gap-2">
-              <CirclePlusIcon className="w-4 h-4" /> ADD
-            </span>
-          </button>
-        )}
+        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+          <span className="flex items-center gap-2">
+            <CirclePlusIcon className="w-4 h-4" /> ADD
+          </span>
+        </button>
       </div>
 
-      <AddQueryModal
-        videoGames={videoGames}
+      <QueryFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onAdd={handleAdd}
+        onSubmit={handleAdd}
       />
     </div>
   );
