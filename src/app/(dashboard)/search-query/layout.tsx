@@ -24,7 +24,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       link: "/search-query/extracted",
     },
     { id: "failed", label: "Failed", link: "/search-query/failed" },
-    { id: "canceled", label: "Canceled", link: "/search-query/canceled" },
   ];
 
   return (

@@ -23,7 +23,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       link: "/ingress-video/downloaded",
     },
     { id: "failed", label: "Failed", link: "/ingress-video/failed" },
-    { id: "canceled", label: "Canceled", link: "/ingress-video/canceled" },
   ];
 
   return (

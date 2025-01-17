@@ -3,7 +3,6 @@ export enum INGRESS_VIDEO_STATUS {
   DOWNLOADINDG = "downloading",
   DOWNLOADED = "downloaded",
   FAILED = "failed",
-  CANCELED = "canceled",
 }
 
 export enum QUERY_STATUS {
@@ -11,7 +10,6 @@ export enum QUERY_STATUS {
   EXTRACTING = "extracting",
   EXTRACTED = "extracted",
   FAILED = "failed",
-  CANCELED = "canceled",
 }
 
 export enum ACTION_TYPE {
