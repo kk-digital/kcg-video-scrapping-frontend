@@ -1,12 +1,19 @@
 "use client";
 
 import SpinLoader from "@/components/Loader/SpinLoader";
+import QueryFormModal from "@/components/Modal/QueryFormModal";
 import Pagination from "@/components/Pagination/Pagination";
+import QueryItem from "@/components/SearchQuery/QueryItem";
 import SortableHeader from "@/components/Table/SortableHeader";
 import { useQueryFilter } from "@/contexts/FilterQueryContext";
 import { useQuries } from "@/contexts/QueriesContext";
-import { deleteQueries, deleteQuery } from "@/services/queryServices";
-import { QUERY_STATUS } from "@/types/enums";
+import {
+  deleteQueries,
+  deleteQuery,
+  updateQuery,
+} from "@/services/queryServices";
+import { QueryCreateSchema, QueryUpdateSchema } from "@/types";
+import { ACTION_TYPE, QUERY_STATUS } from "@/types/enums";
 import { formatDateTimeReadable } from "@/utils/format";
 import {
   Clock,
@@ -21,14 +28,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-const statusIcons: { [key: string]: JSX.Element } = {
-  pending: <Clock className="w-5 h-5 text-yellow-500" />,
-  extracting: <Loader className="w-5 h-5 text-blue-500 animate-spin" />,
-  extracted: <CheckCheck className="w-5 h-5 text-green-500" />,
-  canceled: <XCircle className="w-5 h-5 text-gray-500" />,
-  failed: <AlertTriangleIcon className="w-5 h-5 text-red-500" />,
-};
-
 export default function QueryProcessingView({
   status = undefined,
 }: {
@@ -36,10 +35,14 @@ export default function QueryProcessingView({
 }) {
   const checkboxRef = useRef<HTMLInputElement>(null);
   const { isLoading, totalCount, queries, refreshQueries } = useQuries();
+  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState<boolean>(false);
   const { filterOptions, setFilterOptions } = useQueryFilter();
   const [selectedItems, setSelectedItems] = useState(0);
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [selectedQueryIds, setSelectedQueryIds] = useState<string[]>([]);
+  const [selectedQuery, setSelectedQuery] = useState<
+    QueryUpdateSchema | undefined
+  >(undefined);
 
   useEffect(() => {
     setFilterOptions({
@@ -73,10 +76,11 @@ export default function QueryProcessingView({
   };
 
   const handleCheckboxClick = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    // e: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean,
     queryId: string
   ) => {
-    if (e.target.checked) {
+    if (checked) {
       setSelectedItems(selectedItems + 1);
       setSelectedQueryIds([...selectedQueryIds, queryId]);
     } else {
@@ -130,6 +134,18 @@ export default function QueryProcessingView({
     });
   };
 
+  const handleUpdateQuery = async (
+    query: QueryUpdateSchema | QueryCreateSchema
+  ): Promise<boolean> => {
+    // Type guard to check if it's an update operation
+    if ("id" in query) {
+      const success = await updateQuery(query as QueryUpdateSchema);
+      refreshQueries();
+      return success;
+    }
+    return false; // Or handle create operation if needed
+  };
+
   return (
     <>
       {/* Bulk Actions Bar */}
@@ -181,6 +197,9 @@ export default function QueryProcessingView({
                       handleChangeSort={handleChangeSort}
                     />
                   </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    VIDEO GAME
+                  </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-36 overflow-hidden text-ellipsis">
                     <SortableHeader
                       label="created"
@@ -199,53 +218,26 @@ export default function QueryProcessingView({
                       handleChangeSort={handleChangeSort}
                     />
                   </th>
+                  <th className="px-6 py-4"></th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {/* Example row */}
                 {queries.map((query, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <span className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          onChange={(e) => handleCheckboxClick(e, query.id)}
-                          checked={selectedQueryIds.includes(query.id)}
-                        />
-                        {index + 1}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      <div className="hover:underline text-left">
-                        {query.query}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      <div className="flex items-center  hover:cursor-pointer">
-                        {formatDateTimeReadable(query.created_at)}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      <div className="flex items-center gap-2 capitalize">
-                        {statusIcons[query.status]}
-                        {query.status}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      <div className="flex gap-2 items-center">
-                        <PenIcon
-                          className="w-4 h-4 stroke-blue-500 hover:stroke-blue-700 hover:cursor-pointer"
-                          onClick={() => {}}
-                        />
-                        <TrashIcon
-                          className="w-4 h-4 stroke-red-500 hover:stroke-red-700 hover:cursor-pointer"
-                          onClick={() => {
-                            handleDeleteQuery(query.id);
-                          }}
-                        />
-                      </div>
-                    </td>
-                  </tr>
+                  <QueryItem
+                    query={query}
+                    key={index}
+                    index={index}
+                    onDelete={handleDeleteQuery}
+                    onUpdate={() => {
+                      setSelectedQuery(query);
+                      setIsOpenUpdateModal(true);
+                    }}
+                    onSelect={(checked: boolean, queryId: string) =>
+                      handleCheckboxClick(checked, queryId)
+                    }
+                    selected={selectedQueryIds.includes(query.id)}
+                  />
                 ))}
               </tbody>
             </table>
@@ -267,6 +259,19 @@ export default function QueryProcessingView({
           }}
         />
       </div>
+      {/* Update Query Model */}
+      {selectedQuery && (
+        <QueryFormModal
+          initialData={selectedQuery}
+          isOpen={isOpenUpdateModal}
+          onClose={() => {
+            setSelectedQuery(undefined);
+            setIsOpenUpdateModal(false);
+          }}
+          onSubmit={handleUpdateQuery}
+          actionType={ACTION_TYPE.UPDATE}
+        />
+      )}
     </>
   );
 }
