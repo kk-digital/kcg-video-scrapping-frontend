@@ -66,3 +66,18 @@ export const getTotalCount = async (
     throw error;
   }
 };
+
+export const retryDownloadingVideos = async (ids: string[]): Promise<boolean> => {
+  try {
+    const response = await api.post(
+      "/api/v1/ingress-videos/retry-downloading-ingress-video",
+      {
+        ids,
+      }
+    );
+    return response.data.success;
+  } catch (error) {
+    console.error("Error fetching total count:", error);
+    return false
+  }
+};

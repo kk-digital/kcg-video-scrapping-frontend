@@ -7,6 +7,7 @@ import Pagination from "@/components/Pagination/Pagination";
 import SortableHeader from "@/components/Table/SortableHeader";
 import { useIngressVideoFilter } from "@/contexts/FilterIngressVideoContext";
 import { useIngressVideos } from "@/contexts/IngressVideoContext";
+import { retryDownloadingVideos } from "@/services/ingressVideoServices";
 import { IngressVideoSchema } from "@/types";
 import { INGRESS_VIDEO_STATUS } from "@/types/enums";
 import {
@@ -16,6 +17,7 @@ import {
   XCircleIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 interface IngressVideoDetailedView {
   isOpen: boolean;
@@ -31,7 +33,8 @@ export default function VideoProcessingView({
   const [videoDetailedViewOpen, setVideoDetailedViewOpen] = useState<
     IngressVideoDetailedView | undefined
   >(); // description modal
-  const { isLoading, totalCount, ingressVideos } = useIngressVideos();
+  const { isLoading, totalCount, ingressVideos, refreshIngressVideos } =
+    useIngressVideos();
   const { filterOptions, setFilterOptions } = useIngressVideoFilter();
   const [selectedItems, setSelectedItems] = useState(0);
   const [showBulkActions, setShowBulkActions] = useState(false);
@@ -69,10 +72,7 @@ export default function VideoProcessingView({
     setShowBulkActions(checked);
   };
 
-  const handleCheckboxClick = (
-    checked: boolean,
-    videoId: string
-  ) => {
+  const handleCheckboxClick = (checked: boolean, videoId: string) => {
     if (checked) {
       setSelectedItems(selectedItems + 1);
       setSelectedVideoIds([...selectedVideoIds, videoId]);
@@ -88,6 +88,20 @@ export default function VideoProcessingView({
       orderBy: label,
       isAscending:
         filterOptions.orderBy === label ? !filterOptions.isAscending : true,
+    });
+  };
+
+  const handleRetry = () => {
+    retryDownloadingVideos(selectedVideoIds).then((success) => {
+      if (success) {
+        setSelectedItems(0);
+        setSelectedVideoIds([]);
+        refreshIngressVideos();
+        toast.success("Retry to download videos successfully");
+      } else {
+        // show error
+        toast.error("Failed to retry to download videos");
+      }
     });
   };
 
@@ -113,22 +127,15 @@ export default function VideoProcessingView({
         </div>
         {showBulkActions && (
           <div className="flex items-center gap-2">
-            <button className="btn-secondary text-sm px-3 py-1 flex items-center gap-1">
-              <XCircleIcon className="w-4 h-4" />
-              Cancel
-            </button>
-            <button className="btn-secondary text-sm px-3 py-1 flex items-center gap-1">
+            <button
+              className="btn-secondary text-sm px-3 py-1 flex items-center gap-1"
+              onClick={() => {
+                handleRetry();
+              }}
+            >
               <RefreshCwIcon className="w-4 h-4" />
-              Restart
+              Retry
             </button>
-            <div className="relative">
-              <button className="btn-secondary text-sm px-3 py-1 flex items-center gap-1">
-                <ArrowUpCircleIcon className="w-4 h-4" />
-                Set Priority
-                <ChevronDownCircle className="w-4 h-4" />
-              </button>
-              {/* Dropdown menu for priority levels would go here */}
-            </div>
           </div>
         )}
       </div>
@@ -189,7 +196,7 @@ export default function VideoProcessingView({
                       handleChangeSort={handleChangeSort}
                     />
                   </th>
-                  
+
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 </tr>
               </thead>
@@ -200,7 +207,9 @@ export default function VideoProcessingView({
                     key={index}
                     index={index}
                     video={video}
-                    onSelect={(checked: boolean, video_id: string) => {handleCheckboxClick(checked, video_id)}}
+                    onSelect={(checked: boolean, video_id: string) => {
+                      handleCheckboxClick(checked, video_id);
+                    }}
                     onView={() => {
                       setVideoDetailedViewOpen({ isOpen: true, video: video });
                     }}
