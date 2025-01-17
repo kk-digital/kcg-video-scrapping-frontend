@@ -18,7 +18,7 @@ export const formatBytes = (bytes: number) => {
 };
 export function formatDateTimeReadable(dateTime: Date | string) {
   if (typeof dateTime === "string") {
-    dateTime = new Date(dateTime);
+    dateTime = new Date(dateTime + "Z");
   }
 
   if (dateTime === null || dateTime === undefined) {
