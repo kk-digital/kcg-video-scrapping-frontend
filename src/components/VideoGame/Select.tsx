@@ -21,7 +21,7 @@ export const VideoGameSelect = ({
       <option value="">Select a Video Game</option>
       {videoGames?.map((videoGame) => (
         <option key={videoGame.game_id} value={videoGame.game_id}>
-          {videoGame.title}
+          {videoGame.title} - {videoGame.game_id}
         </option>
       ))}
     </select>
