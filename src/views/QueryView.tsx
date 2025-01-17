@@ -14,17 +14,7 @@ import {
 } from "@/services/queryServices";
 import { QueryCreateSchema, QueryUpdateSchema } from "@/types";
 import { ACTION_TYPE, QUERY_STATUS } from "@/types/enums";
-import { formatDateTimeReadable } from "@/utils/format";
-import {
-  Clock,
-  Loader,
-  XCircle,
-  AlertTriangleIcon,
-  XCircleIcon,
-  CheckCheck,
-  PenIcon,
-  TrashIcon,
-} from "lucide-react";
+import { XCircleIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
