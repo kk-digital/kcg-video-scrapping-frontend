@@ -44,7 +44,7 @@ const Sidebar = () => {
             )}
           >
             <Search className="mr-3" size={20} />
-            <span>Search Query</span>
+            <span>Scrapping Query</span>
           </Link>
           <Link
             href="/ingress-video"
