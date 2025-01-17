@@ -10,26 +10,11 @@ import { useIngressVideos } from "@/contexts/IngressVideoContext";
 import { IngressVideoSchema } from "@/types";
 import { INGRESS_VIDEO_STATUS } from "@/types/enums";
 import {
-  formatBytes,
-  formatDateTimeReadable,
-  formatSecondsToHHMMSS,
-} from "@/utils/format";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
-import {
-  Clock,
-  Loader,
-  Download,
-  XCircle,
-  PlayCircle,
-  AlertTriangleIcon,
   ArrowUpCircleIcon,
   ChevronDownCircle,
   RefreshCwIcon,
   XCircleIcon,
-  Timer,
-  BarChart,
 } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 interface IngressVideoDetailedView {
