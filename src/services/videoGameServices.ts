@@ -90,6 +90,18 @@ export const addVideoGame = async (videoGame: VideoGameSchema) => {
   }
 };
 
+export const updateVideoGame = async (videoGame: VideoGameSchema) => {
+  try {
+    const url = "/api/v1/video-games/update-video-game";
+    const response = await api.put(url, videoGame);
+    console.log(response.data);
+    return response.data.success;
+  } catch (error) {
+    console.error("Error updating video game:", error);
+    throw error;
+  }
+};
+
 export const deleteVideoGame = async (id: string) => {
   try {
     const url = `/api/v1/video-games/delete-video-game?game_id=${id}`;

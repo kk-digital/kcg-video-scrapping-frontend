@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X, RefreshCw, Plus } from "lucide-react";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
@@ -6,46 +6,61 @@ import { Tooltip } from "react-tooltip";
 import { VideoGameSchema } from "@/types";
 import { addVideoGame } from "@/services/videoGameServices";
 import { toast } from "react-toastify";
+import { ACTION_TYPE } from "@/types/enums";
+import { init } from "next/dist/compiled/webpack/webpack";
 
-interface AddVideoGameModalProps {
+interface VideoGameFormModalProps {
   isOpen: boolean;
+  initialData?: VideoGameSchema;
   onClose: () => void;
-  onAdd: (videoGame: VideoGameSchema) => void;
+  onSubmit: (videoGame: VideoGameSchema) => Promise<boolean>;
+  actionType?: ACTION_TYPE;
 }
 
-const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
+const VideoGameFormModal: React.FC<VideoGameFormModalProps> = ({
   isOpen,
   onClose,
-  onAdd,
+  onSubmit,
+  initialData,
+  actionType = ACTION_TYPE.CREATE,
 }) => {
-  const [videoGameId, setVideoGameId] = useState("");
-  const [videoGameTitle, setVideoGameTitle] = useState("");
-  const [videoGameDesp, setVideoGameDesp] = useState("");
+  console.log(initialData);
+  const [videoGame, setVideoGame] = useState<VideoGameSchema>(
+    initialData ||
+      ({
+        game_id: "",
+        title: "",
+        description: "",
+      } as VideoGameSchema)
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const handleAddVideoGame = () => {
+
+  useEffect(() => {
+    console.log("videoGame", videoGame);
+  }, [videoGame]);
+
+  const handleSubmit = () => {
     setIsLoading(true);
-    if (videoGameId === "" || videoGameTitle === "") {
+    if (videoGame.game_id === "" || videoGame.title === "") {
       toast.error("Please fill in all fields");
       setIsLoading(false);
       return;
     }
-    addVideoGame({
-      game_id: videoGameId,
-      title: videoGameTitle,
-      description: videoGameDesp,
-    } as VideoGameSchema)
+    console.log("09876543", videoGame);
+    onSubmit(videoGame)
       .then((success) => {
         if (success) {
-          toast.success("Video Game Added Successfully");
-          setVideoGameId("");
-          setVideoGameTitle("");
-          setVideoGameDesp("");
-          setIsLoading(false);
-          onAdd({
-            game_id: videoGameId,
-            title: videoGameTitle,
-            description: videoGameDesp,
+          if (actionType == ACTION_TYPE.CREATE) {
+            toast.success("Video Game added Successfully");
+          } else {
+            toast.success("Video Game updated Successfully");
+          }
+          setVideoGame({
+            game_id: "",
+            title: "",
+            description: "",
           } as VideoGameSchema);
+          setIsLoading(false);
           onClose();
         } else {
           toast.error("Failed to add video game");
@@ -67,9 +82,11 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
   };
 
   const handleCancel = () => {
-    setVideoGameId("");
-    setVideoGameTitle("");
-    setVideoGameDesp("");
+    setVideoGame({
+      game_id: "",
+      title: "",
+      description: "",
+    } as VideoGameSchema);
     onClose();
   };
 
@@ -109,7 +126,9 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
                   <div className="flex items-center gap-2">
                     <Plus className="h-5 w-5 text-blue-500" />
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Add Video Game
+                      {actionType == ACTION_TYPE.CREATE
+                        ? "Add Video Game"
+                        : "Update Video Game"}
                     </h2>
                   </div>
                   <button
@@ -121,7 +140,7 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleAddVideoGame} className="p-4 space-y-2">
+                <form className="p-4 space-y-2">
                   {/* Steam ID Field */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -153,9 +172,15 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
                       type="text"
                       id="steamId"
                       name="steamId"
-                      value={videoGameId}
-                      onChange={(e) => setVideoGameId(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                      disabled={isLoading || actionType === ACTION_TYPE.UPDATE} // Disable input if loading or updating
+                      value={videoGame.game_id}
+                      onChange={(e) =>
+                        setVideoGame({
+                          ...videoGame,
+                          game_id: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow disabled:cursor-not-allowed"
                       placeholder="Enter Steam ID"
                     />
                   </div>
@@ -191,8 +216,13 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
                       type="text"
                       id="title"
                       name="title"
-                      value={videoGameTitle}
-                      onChange={(e) => setVideoGameTitle(e.target.value)}
+                      value={videoGame.title}
+                      onChange={(e) =>
+                        setVideoGame({
+                          ...videoGame,
+                          title: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                       placeholder="Enter game title"
                     />
@@ -229,8 +259,13 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
                     <textarea
                       id="description"
                       name="description"
-                      value={videoGameDesp}
-                      onChange={(e) => setVideoGameDesp(e.target.value)}
+                      value={videoGame.description}
+                      onChange={(e) =>
+                        setVideoGame({
+                          ...videoGame,
+                          description: e.target.value,
+                        })
+                      }
                       rows={4}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow resize-none"
                       placeholder="Enter game description"
@@ -246,8 +281,9 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
                       Cancel
                     </button>
                     <button
+                      type="button"
                       disabled={isLoading}
-                      onClick={() => handleAddVideoGame()}
+                      onClick={() => handleSubmit()}
                       className="btn-primary flex items-center justify-center"
                     >
                       {isLoading ? (
@@ -255,7 +291,7 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
                       ) : (
                         <Plus className="w-5 h-5 mr-2" />
                       )}
-                      ADD
+                      {actionType === ACTION_TYPE.CREATE ? "ADD" : "UDPATE"}
                     </button>
                   </div>
                 </form>
@@ -268,4 +304,4 @@ const AddVideoGameModal: React.FC<AddVideoGameModalProps> = ({
   );
 };
 
-export default AddVideoGameModal;
+export default VideoGameFormModal;

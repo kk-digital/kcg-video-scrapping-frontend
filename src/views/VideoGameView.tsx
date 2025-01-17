@@ -1,6 +1,7 @@
 "use client";
 
 import SpinLoader from "@/components/Loader/SpinLoader";
+import VideoGameFormModal from "@/components/Modal/VideoGameFormModal";
 import Pagination from "@/components/Pagination/Pagination";
 import SortableHeader from "@/components/Table/SortableHeader";
 import { useVideoGameFilter } from "@/contexts/FilterVideoGameContext";
@@ -8,8 +9,10 @@ import { useVideoGames } from "@/contexts/VideoGameContext";
 import {
   deleteVideoGame,
   deleteVideoGames,
+  updateVideoGame,
 } from "@/services/videoGameServices";
 import { VideoGameSchema } from "@/types";
+import { ACTION_TYPE } from "@/types/enums";
 import { formatDateTimeReadable } from "@/utils/format";
 import { PenIcon, TrashIcon, XCircleIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -20,12 +23,15 @@ export default function VideoGameProcessingView() {
   const { refreshVideoGames } = useVideoGames();
   const { filterOptions, setFilterOptions } = useVideoGameFilter();
   const { isLoading, videoGames, totalCount } = useVideoGames();
-  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState();
+  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState<boolean>(false);
   const [selectedItems, setSelectedItems] = useState(0);
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [selectedVideoGameIds, setSelectedVideoGameIds] = useState<string[]>(
     []
   );
+  const [selectedVideoGame, setSelectedVideoGame] = useState<
+    VideoGameSchema | undefined
+  >(undefined);
 
   useEffect(() => {
     if (checkboxRef.current) {
@@ -38,6 +44,10 @@ export default function VideoGameProcessingView() {
       }
     }
   }, [selectedItems, videoGames?.length]);
+
+  useEffect(() => {
+    console.log(selectedVideoGame);
+  }, [selectedVideoGame]);
 
   const handleBuckCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
@@ -84,8 +94,13 @@ export default function VideoGameProcessingView() {
     });
   };
 
-  const handleUpate = (videoGame: VideoGameSchema) => {
-    //  TODO: add logic to update video game
+  const handleUpdateVideoGame = async (
+    videoGame: VideoGameSchema
+  ): Promise<boolean> => {
+    const success = await updateVideoGame(videoGame);
+    refreshVideoGames();
+
+    return success;
   };
 
   const handleDeleteVideoGame = (videoGameId: string) => {
@@ -214,7 +229,10 @@ export default function VideoGameProcessingView() {
                       <div className="flex gap-2 items-center">
                         <PenIcon
                           className="w-4 h-4 stroke-blue-500 hover:stroke-blue-700 hover:cursor-pointer"
-                          onClick={() => {}}
+                          onClick={() => {
+                            setSelectedVideoGame(videoGame);
+                            setIsOpenUpdateModal(true);
+                          }}
                         />
                         <TrashIcon
                           className="w-4 h-4 stroke-red-500 hover:stroke-red-700 hover:cursor-pointer"
@@ -246,6 +264,21 @@ export default function VideoGameProcessingView() {
           }}
         />
       </div>
+      {/* Update Video Game Modal */}
+      {
+        selectedVideoGame && (
+          <VideoGameFormModal
+            isOpen={isOpenUpdateModal}
+            onClose={() => {
+              setIsOpenUpdateModal(false);
+              setSelectedVideoGame(undefined);
+            }}
+            onSubmit={handleUpdateVideoGame}
+            initialData={selectedVideoGame}
+            actionType={ACTION_TYPE.UPDATE}
+          />
+        )
+      }
     </>
   );
 }

@@ -1,17 +1,24 @@
 import { Calendar, CirclePlusIcon, SearchIcon } from "lucide-react";
-import AddVideoGameModal from "../Modal/AddVideoGameModal";
+import VideoGameFormModal from "../Modal/VideoGameFormModal";
 import { useState } from "react";
 import { useVideoGames } from "@/contexts/VideoGameContext";
 import { useVideoGameFilter } from "@/contexts/FilterVideoGameContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { VideoGameSchema } from "@/types";
+import { addVideoGame } from "@/services/videoGameServices";
 
 export default function Toolbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { filterOptions, setFilterOptions } = useVideoGameFilter();
   const { refreshVideoGames } = useVideoGames();
-  const handleAdd = () => {
+  const handleAddVideoGame = async (
+    videoGame: VideoGameSchema
+  ): Promise<boolean> => {
+    const success = await addVideoGame(videoGame);
     refreshVideoGames();
+
+    return success;
   };
 
   return (
@@ -81,10 +88,10 @@ export default function Toolbar() {
         </button>
       </div>
 
-      <AddVideoGameModal
+      <VideoGameFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onAdd={handleAdd}
+        onSubmit={handleAddVideoGame}
       />
     </div>
   );

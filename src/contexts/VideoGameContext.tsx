@@ -132,7 +132,7 @@ export const VideoGamesContextProvider = ({
 
 export const useVideoGames = (): VideoGamesContextType => {
   const context = useContext(VideoGamesContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useVideoGames must be used within a VideoGamesContextProvider"
     );

@@ -13,3 +13,8 @@ export enum QUERY_STATUS {
   FAILED = "failed",
   CANCELED = "canceled",
 }
+
+export enum ACTION_TYPE {
+  UPDATE = "update",
+  CREATE = "create",
+}
