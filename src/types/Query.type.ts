@@ -12,3 +12,10 @@ export interface QueryCreateSchema {
   query: string;
   game_id: string;
 }
+
+
+export interface QueryUpdateSchema {
+  id: string;
+  query: string;
+  game_id: string;
+} 
