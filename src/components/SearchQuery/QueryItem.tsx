@@ -72,7 +72,7 @@ const QueryItem = ({
         <div className="hover:underline text-left">{query.query}</div>
       </td>
       <td className="px-6 py-4 text-sm text-gray-900">
-        <div className="hover:underline text-left">{videoGame?.title}</div>
+        <div className="hover:underline text-left">{videoGame?.title ?? "N/A"}</div>
       </td>
       
       <td className="px-6 py-4 text-sm text-gray-900">
