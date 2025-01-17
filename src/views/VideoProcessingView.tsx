@@ -25,9 +25,9 @@ interface IngressVideoDetailedView {
 }
 
 export default function VideoProcessingView({
-  status = undefined,
+  status = null,
 }: {
-  status: INGRESS_VIDEO_STATUS | undefined;
+  status: INGRESS_VIDEO_STATUS | null;
 }) {
   const checkboxRef = useRef<HTMLInputElement>(null);
   const [videoDetailedViewOpen, setVideoDetailedViewOpen] = useState<

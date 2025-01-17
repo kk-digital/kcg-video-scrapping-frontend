@@ -81,10 +81,13 @@ export const IngressVideosContextProvider = ({
     currentPage: number;
     pageSize: number;
     title: string;
-    status: INGRESS_VIDEO_STATUS | undefined;
+    status: INGRESS_VIDEO_STATUS | undefined | null;
     isAscending: boolean | undefined;
     orderBy: string;
   }) => {
+    if (status === undefined) {
+      return;
+    }
     setIsLoading(true);
     const offset = pageSize * (currentPage - 1);
     const limit = pageSize;
@@ -103,12 +106,14 @@ export const IngressVideosContextProvider = ({
     status,
     title,
   }: {
-    status: INGRESS_VIDEO_STATUS | undefined;
+    status: INGRESS_VIDEO_STATUS | undefined | null;
     title?: string;
   }) => {
-    getTotalCount(status, title).then((count) => {
-      setTotalCount(count);
-    });
+    if (status !== undefined) {
+      getTotalCount(status, title).then((count) => {
+        setTotalCount(count);
+      });
+    }
   };
 
   const refreshIngressVideos = () => {

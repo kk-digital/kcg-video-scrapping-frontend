@@ -5,13 +5,13 @@ interface FetchIngressVideoProps {
   offset: number;
   limit: number;
   title?: string;
-  status?: string;
+  status: string | null;
   orderBy?: string;
   isAscending?: boolean;
 }
 
 export const getIngressVideos = async (
-  data: FetchIngressVideoProps = { offset: 0, limit: 20 }
+  data: FetchIngressVideoProps = { offset: 0, limit: 20, status: null }
 ) => {
   const { offset, limit, title, status, orderBy, isAscending } = data;
   let url = "";
@@ -48,7 +48,7 @@ export const getVideoById = async (id: string) => {
 };
 
 export const getTotalCount = async (
-  status: INGRESS_VIDEO_STATUS | undefined = undefined,
+  status: INGRESS_VIDEO_STATUS | null = null,
   title?: string
 ) => {
   try {
@@ -67,7 +67,9 @@ export const getTotalCount = async (
   }
 };
 
-export const retryDownloadingVideos = async (ids: string[]): Promise<boolean> => {
+export const retryDownloadingVideos = async (
+  ids: string[]
+): Promise<boolean> => {
   try {
     const response = await api.post(
       "/api/v1/ingress-videos/retry-downloading-ingress-video",
@@ -78,6 +80,6 @@ export const retryDownloadingVideos = async (ids: string[]): Promise<boolean> =>
     return response.data.success;
   } catch (error) {
     console.error("Error fetching total count:", error);
-    return false
+    return false;
   }
 };

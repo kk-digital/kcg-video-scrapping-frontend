@@ -5,7 +5,7 @@ export interface IngressVideoFilterOption {
   currentPage: number;
   pageSize: number;
   title: string;
-  status: INGRESS_VIDEO_STATUS | undefined;
+  status: INGRESS_VIDEO_STATUS | undefined | null;
   orderBy: string;
   isAscending: boolean | undefined;
 }
