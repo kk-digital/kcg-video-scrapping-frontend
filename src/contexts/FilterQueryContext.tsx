@@ -5,7 +5,7 @@ export interface QueryFilterOption {
   currentPage: number;
   pageSize: number;
   query: string;
-  status: QUERY_STATUS | undefined;
+  status: QUERY_STATUS | undefined | null;
   fromDate: Date | undefined;
   toDate: Date | undefined;
   orderBy: string;

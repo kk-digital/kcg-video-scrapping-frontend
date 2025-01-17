@@ -5,7 +5,7 @@ interface FetchQueriesProps {
   offset: number;
   limit: number;
   query?: string;
-  status?: string;
+  status?: string | null;
   fromDate?: string;
   toDate?: string;
   orderBy?: string;
@@ -70,7 +70,7 @@ export const getTotalCount = async ({
   toDate,
 }: {
   query?: string;
-  status?: string;
+  status?: string | null;
   fromDate?: string;
   toDate?: string;
 }) => {

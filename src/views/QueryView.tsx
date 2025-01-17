@@ -19,9 +19,9 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function QueryProcessingView({
-  status = undefined,
+  status = null,
 }: {
-  status: QUERY_STATUS | undefined;
+  status: QUERY_STATUS | null;
 }) {
   const checkboxRef = useRef<HTMLInputElement>(null);
   const { isLoading, totalCount, queries, refreshQueries } = useQuries();

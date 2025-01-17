@@ -63,12 +63,15 @@ export const QueriesContextProvider = ({
     currentPage: number;
     pageSize: number;
     query: string;
-    status: QUERY_STATUS | undefined;
+    status: QUERY_STATUS | undefined | null;
     fromDate?: string;
     toDate?: string;
     isAscending: boolean | undefined;
     orderBy: string;
   }) => {
+    if (status === undefined) {
+      return;
+    }
     setIsLoading(true);
     const offset = pageSize * (currentPage - 1);
     const limit = pageSize;
@@ -99,10 +102,13 @@ export const QueriesContextProvider = ({
     toDate,
   }: {
     query?: string;
-    status?: string;
+    status?: string | null;
     fromDate?: string;
     toDate?: string;
   }) => {
+    if (status === undefined) {
+      return;
+    }
     getTotalCount({
       status,
       query,
