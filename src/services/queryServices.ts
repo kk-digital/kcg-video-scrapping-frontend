@@ -1,4 +1,4 @@
-import { QueryCreateSchema } from "@/types";
+import { QueryCreateSchema, QueryUpdateSchema } from "@/types";
 import { api } from "@/utils/api";
 
 interface FetchQueriesProps {
@@ -107,6 +107,17 @@ export const addQuery = async (query: QueryCreateSchema) => {
     return response.data.success;
   } catch (error) {
     console.error("Error adding search query:", error);
+    throw error;
+  }
+};
+
+export const updateQuery = async (query: QueryUpdateSchema) => {
+  try {
+    const url = "/api/v1/search-queries/update-search-query";
+    const response = await api.put(url, query);
+    return response.data.success;
+  } catch (error) {
+    console.error("Error updating search query:", error);
     throw error;
   }
 };
