@@ -107,7 +107,6 @@ export const IngressVideosContextProvider = ({
     title?: string;
   }) => {
     getTotalCount(status, title).then((count) => {
-      console.log(count, "here");
       setTotalCount(count);
     });
   };
