@@ -38,7 +38,12 @@ const QueryFormModal: React.FC<QueryFormModalProps> = ({
   const [videoGames, setVideoGames] = useState<VideoGameSchema[]>([]);
 
   const fetchVideoGames = async () => {
-    getVideoGames({ offset: 0, limit: 9999999 })
+    getVideoGames({
+      offset: 0,
+      limit: 9999999,
+      orderBy: "title",
+      isAscending: true,
+    })
       .then((videoGames: VideoGameSchema[]) => {
         setVideoGames(videoGames);
       })
