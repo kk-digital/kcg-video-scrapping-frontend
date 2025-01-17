@@ -26,7 +26,7 @@ export const VideoGameFilterContextProvider = ({
   children: ReactNode;
 }) => {
   const [filterOptions, setFilterOptions] = useState<VideoGameFilterOption>({
-    currentPage: 0,
+    currentPage: 1,
     pageSize: 10,
     videoGameTitle: "",
     videoGameId: "",

@@ -25,7 +25,7 @@ export const IngressVideoFilterContextProvider = ({
   children: ReactNode;
 }) => {
   const [filterOptions, setFilterOptions] = useState<IngressVideoFilterOption>({
-    currentPage: 0,
+    currentPage: 1,
     pageSize: 10,
     title: "",
     status: undefined,

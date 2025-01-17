@@ -27,7 +27,7 @@ export const QueryFilterContextProvider = ({
   children: ReactNode;
 }) => {
   const [filterOptions, setFilterOptions] = useState<QueryFilterOption>({
-    currentPage: 0,
+    currentPage: 1,
     pageSize: 10,
     query: "",
     status: undefined,
